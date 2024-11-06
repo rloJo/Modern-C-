@@ -123,7 +123,7 @@
 
 
 ### C문법에 추가된 것들
-1. 참조
+1. 참조 (lvalue)
 - 별명과 비슷하다.
 ``` C++
   int int_value;
@@ -158,3 +158,57 @@
 ```
 - 다음 위 코드는 동일한 효과를 얻는다.
 2. Rvalue 참조
+```c++
+  int intVal()
+  {
+    return 5;
+  }
+
+  int &ir = intVal();         // 실패: 임시값을 참조함
+  int const &ic = intVal();   // 허용: 변경불능 임시 값 참조
+  int *ip = &intVal();        // 실패: lvalue 값이 없음
+
+   void receive(int &value)            // 주의: lvalue 참조
+   {
+    cout << "int value parameter\n";
+   }
+   void receive(int &&value)           // 주의: rvalue 참조
+   {
+    cout << "int R-value parameter\n";
+   }
+
+   int main()
+    {
+        receive(18);
+        int value = 5;
+        receive(value);
+        receive(intVal());
+    }
+```
+```
+//결과 
+  int R-value parameter
+  int value parameter
+  int R-value parameter
+```
+3. 초기화 리스트
+- 초기화 리스트를 괄호를 둘러싼 값들의 리스트로 정의.
+```C++
+void values(std::initializer_list<int> iniValues)
+    {
+    }
+
+values({2, 3, 5, 7, 11, 13});
+
+```
+
+
+4. `auto` 키워드
+- 변수의 유형 정의를 간단하게 하고 컴파일러가 함수나  변수의 적절한 유형을 분별할 수 있을 경우에 함수의 유형을 돌려준다.
+
+5. 범위 기반 `for`
+```c++
+ // int array[30]이라고 가정
+ for (auto &element: array)
+    statement;
+```
